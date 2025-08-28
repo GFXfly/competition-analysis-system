@@ -7,7 +7,7 @@ module.exports = {
     apps: [{
         name: 'competition-analysis',
         script: 'server.js',
-        cwd: '/var/www/competition-analysis',
+        cwd: '/var/www/competition',
         
         // 实例配置
         instances: 2, // 启动2个实例实现负载均衡
@@ -24,9 +24,9 @@ module.exports = {
         },
         
         // 日志配置
-        log_file: '/var/log/competition-analysis/combined.log',
-        out_file: '/var/log/competition-analysis/out.log',
-        error_file: '/var/log/competition-analysis/error.log',
+        log_file: '/var/log/competition/combined.log',
+        out_file: '/var/log/competition/out.log',
+        error_file: '/var/log/competition/error.log',
         log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
         merge_logs: true,
         
@@ -65,7 +65,7 @@ module.exports = {
             host: 'cursor2.com',
             ref: 'origin/main',
             repo: 'git@github.com:yourusername/competition-analysis.git',
-            path: '/var/www/competition-analysis',
+            path: '/var/www/competition',
             'pre-deploy-local': '',
             'post-deploy': 'npm ci --only=production && pm2 reload ecosystem.config.js --env production',
             'pre-setup': 'apt-get install -y git'
