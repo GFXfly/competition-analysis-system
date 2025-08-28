@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公平竞争审查在线工具</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --apple-bg: #f5f5f7;
+            --apple-primary: #0071e3;
+            --apple-secondary: #86868b;
+            --apple-dark: #1d1d1f;
+            --apple-card-bg: #ffffff;
+            --apple-success: #35c759;
+            --apple-warning: #ff9f0a;
+            --apple-error: #ff3b30;
+            --apple-radius: 12px;
+            --apple-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--apple-bg);
+            color: var(--apple-dark);
+            line-height: 1.5;
+        }
+        
+        .header-apple {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+            padding: 1.2rem 0;
+        }
+        
+        .card-apple {
+            background: var(--apple-card-bg);
+            border-radius: var(--apple-radius);
+            border: none;
+            box-shadow: var(--apple-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .btn-apple-primary {
+            background-color: var(--apple-primary);
+            border: none;
+            color: white;
+            border-radius: 20px;
+            padding: 0.6rem 1.8rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-apple-primary:hover {
+            background-color: #0077ed;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .upload-area {
+            border: 2px dashed #d2d2d7;
+            border-radius: var(--apple-radius);
+            background-color: rgba(0, 0, 0, 0.02);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--apple-primary);
+            background-color: rgba(0, 113, 227, 0.05);
+        }
+        
+        .progress-apple {
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress-bar-apple {
+            background-color: var(--apple-primary);
+        }
+        
+        .reasoning-log {
+            max-height: 350px;
+            overflow-y: auto;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+        }
+        
+        .reasoning-step {
+            padding: 10px 12px;
+            margin-bottom: 6px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.8);
+            border-left: 3px solid transparent;
+            animation: slideInRight 0.4s ease-out;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .reasoning-step:hover {
+            transform: translateX(2px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .reasoning-timestamp {
+            color: #8e8e93;
+            font-size: 11px;
+            margin-right: 10px;
+            font-weight: 600;
+            opacity: 0.8;
+        }
+        
+        .reasoning-thinking {
+            color: #007aff;
+            font-weight: 500;
+            border-left-color: #007aff;
+        }
+        
+        .reasoning-result {
+            color: #34c759;
+            font-weight: 600;
+            border-left-color: #34c759;
+            background: rgba(52, 199, 89, 0.05);
+        }
+        
+        .reasoning-log::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .reasoning-log::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        .reasoning-log::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+        
+        .reasoning-log::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        .reasoning-processing {
+            animation: pulse 1.5s infinite;
+        }
+        
+        .reasoning-ai-thinking {
+            color: #9333ea !important;
+            background: linear-gradient(135deg, rgba(147, 51, 234, 0.1) 0%, rgba(147, 51, 234, 0.05) 100%) !important;
+            border-left-color: #9333ea !important;
+            font-style: italic;
+            position: relative;
+        }
+        
+        .reasoning-ai-thinking::before {
+            content: "🤖";
+            position: absolute;
+            left: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+        }
+        
+        /* 问题显示增强样式 */
+        .issue-card {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+        }
+        
+        .issue-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.1) !important;
+        }
+        
+        .issue-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--apple-dark);
+        }
+        
+        .violation-text {
+            background: rgba(255, 59, 48, 0.1);
+            border-left: 3px solid #ff3b30;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        
+        .quote-highlight {
+            background: rgba(0, 122, 255, 0.05);
+            border-left: 3px solid #007aff;
+            padding: 12px;
+            border-radius: 6px;
+            font-style: italic;
+            color: #555;
+        }
+        
+        .suggestion-list {
+            background: rgba(52, 199, 89, 0.1);
+            border-left: 3px solid #34c759;
+            padding: 12px;
+            border-radius: 6px;
+        }
+        
+        .suggestion-item {
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(52, 199, 89, 0.2);
+        }
+        
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+        
+        .legal-basis {
+            background: rgba(142, 142, 147, 0.1);
+            border-left: 3px solid #8e8e93;
+            padding: 12px;
+            border-radius: 6px;
+        }
+        
+        .problem-description {
+            background: rgba(0, 122, 255, 0.05);
+            border-left: 3px solid #007aff;
+            padding: 12px;
+            border-radius: 6px;
+            line-height: 1.6;
+        }
+        
+        .competitive-impact {
+            background: rgba(255, 149, 10, 0.1);
+            border-left: 3px solid #ff950a;
+            padding: 12px;
+            border-radius: 6px;
+        }
+        
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 8px;
+            font-size: 1rem;
+        }
+        
+        /* 严重程度徽章样式 */
+        .severity-high {
+            background-color: #ff3b30 !important;
+            color: white !important;
+        }
+        
+        .severity-medium {
+            background-color: #ff9500 !important;
+            color: white !important;
+        }
+        
+        .severity-low {
+            background-color: #ffcc00 !important;
+            color: #333 !important;
+        }
+        
+        /* 问题概览样式 */
+        .issues-summary {
+            background: linear-gradient(135deg, rgba(255, 149, 10, 0.1) 0%, rgba(255, 59, 48, 0.1) 100%);
+            border: 1px solid rgba(255, 149, 10, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .issues-summary h5 {
+            color: #d2680d;
+            font-weight: 600;
+        }
+        
+        /* 动画效果 */
+        @keyframes slideInFromBottom {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .issue-card {
+            animation: slideInFromBottom 0.5s ease-out;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .issue-card {
+                margin-bottom: 1rem;
+            }
+            
+            .section-title {
+                font-size: 0.9rem;
+            }
+            
+            .violation-text, .quote-highlight, .suggestion-list, .legal-basis, .problem-description, .competitive-impact {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header-apple">
+        <div class="container">
+            <div class="text-center">
+                <h1 class="h2 mb-3" style="font-size: 2.2rem; font-weight: 600;">公平竞争审查在线工具</h1>
+                <p class="text-muted" style="font-size: 1.1rem;">杭州市临安区公平竞争审查专用</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="container my-5">
+        <div class="row">
+            <div class="col-md-10 mx-auto">
+                <div class="card-apple shadow-sm p-4">
+                    <!-- 上传区域 -->
+                    <div id="upload-area" class="upload-area text-center p-5 mb-4">
+                        <i class="bi bi-cloud-arrow-up display-1 text-primary mb-3"></i>
+                        <h3 class="h5 mb-2">拖拽文件到此处或点击上传</h3>
+                        <p class="text-muted">支持 .docx, .doc 格式文件</p>
+                        <input type="file" id="file-upload" class="d-none" accept=".docx,.doc">
+                        <button id="upload-btn" class="btn-apple-primary mt-3">选择文件</button>
+                    </div>
+                    
+                    <!-- 文件信息 -->
+                    <div id="file-info" class="mb-4 d-none">
+                        <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                            <i class="bi bi-file-earmark-text fs-1 text-primary me-3"></i>
+                            <div class="flex-grow-1">
+                                <h4 id="file-name" class="h6 mb-1">文件名称</h4>
+                                <p id="file-size" class="text-muted small mb-0">文件大小</p>
+                            </div>
+                            <button id="remove-file" class="btn-close"></button>
+                        </div>
+                    </div>
+                    
+                    <!-- 审查按钮 -->
+                    <div class="text-center mb-5">
+                        <button id="review-btn" class="btn-apple-primary px-5 py-2" disabled>
+                            开始审查
+                        </button>
+                    </div>
+                    
+                    <!-- 推理过程显示 -->
+                    <div id="loading" class="d-none">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-cpu"></i> AI推理过程
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="reasoning-content" class="reasoning-log">
+                                    <div class="reasoning-step">
+                                        <span class="text-muted small">准备开始审查...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 审查结果 -->
+                    <div id="review-results" class="d-none">
+                        <div class="text-center mb-4">
+                            <h2 class="h3 mb-3">审查结果</h2>
+                            <div class="mb-4">
+                                发现 <span id="issue-count" class="fw-bold text-warning fs-4">0</span> 个问题
+                            </div>
+                        </div>
+                        
+                        <div id="issues-container" class="mb-4">
+                            <!-- 问题列表 -->
+                        </div>
+                        
+                        <div class="d-flex justify-content-center gap-3">
+                            <button id="export-result-btn" class="btn btn-outline-success">
+                                <i class="bi bi-file-earmark-word me-2"></i>导出报告
+                            </button>
+                            <button id="new-review-btn" class="btn btn-outline-primary">
+                                <i class="bi bi-arrow-repeat me-2"></i>重新审查
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-light py-4 mt-5">
+        <div class="container text-center">
+            <p class="text-muted mb-2">杭州市临安区市场监督管理局</p>
+            <div class="small text-muted">
+                <a href="/admin/audit-logs" class="text-decoration-none me-3">📊 审查记录管理</a>
+                <span>© 2025 浙ICP备2025160577号</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main_optimized.js?v=1755876500"></script>
+</body>
+</html>
