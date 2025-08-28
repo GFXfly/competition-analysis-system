@@ -9,7 +9,7 @@
 
 ## 📦 第一步：准备部署包
 
-部署包已生成: `competition_deploy_20250825_231022/`
+部署包动态生成: `competition-deploy-YYYYMMDD_HHMMSS/`
 
 包含的关键修复：
 - ✅ 修复后的 `services/deepseekService.js`（智能回退机制）
@@ -24,7 +24,7 @@
 ### 方法1：SCP上传（推荐）
 ```bash
 # 压缩部署包
-tar -czf competition_deploy.tar.gz competition_deploy_20250825_231022/
+tar -czf competition_deploy.tar.gz competition-deploy-YYYYMMDD_HHMMSS/
 
 # 上传到服务器
 scp competition_deploy.tar.gz root@cursor2.com:/tmp/
@@ -33,7 +33,7 @@ scp competition_deploy.tar.gz root@cursor2.com:/tmp/
 ssh root@cursor2.com
 cd /tmp
 tar -xzf competition_deploy.tar.gz
-cd competition_deploy_20250825_231022
+cd competition-deploy-YYYYMMDD_HHMMSS
 ```
 
 ### 方法2：Git部署（如果代码在仓库中）
@@ -49,7 +49,7 @@ cd /tmp/competition_deploy
 
 ```bash
 # 在服务器上，进入部署目录
-cd /tmp/competition_deploy_20250825_231022
+cd /tmp/competition-deploy-YYYYMMDD_HHMMSS
 
 # 给部署脚本执行权限
 chmod +x deploy/deploy.sh

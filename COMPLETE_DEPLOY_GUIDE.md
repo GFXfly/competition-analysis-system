@@ -19,7 +19,7 @@ ls -la | grep competition_deploy
 
 **预期反应**：
 ```
-drwxr-xr-x  14 user  staff   448 Aug 25 23:10 competition_deploy_20250825_231022
+drwxr-xr-x  14 user  staff   448 Aug 25 23:10 competition-deploy-YYYYMMDD_HHMMSS
 ```
 
 **如果没看到**：说明部署包不在当前目录，请先cd到正确目录或重新生成。
@@ -127,7 +127,7 @@ cd /Users/gaofeixiang/Desktop/competition
 
 ### 3.2 压缩部署包（方便上传）
 ```bash
-tar -czf competition_deploy_new.tar.gz competition_deploy_20250825_231022/
+tar -czf competition_deploy_new.tar.gz competition-deploy-YYYYMMDD_HHMMSS/
 ```
 
 **预期反应**：没有任何输出，但会创建一个压缩文件
@@ -167,7 +167,7 @@ ssh root@cursor2.com
 ```bash
 cd /tmp
 tar -xzf competition_deploy_new.tar.gz
-ls -la competition_deploy_20250825_231022/
+ls -la competition-deploy-YYYYMMDD_HHMMSS/
 ```
 
 **应该看到**：
@@ -185,7 +185,7 @@ drwxr-xr-x  10 root root  320 Aug 25 23:10 deploy
 
 ### 4.3 进入部署目录
 ```bash
-cd competition_deploy_20250825_231022
+cd competition-deploy-YYYYMMDD_HHMMSS
 ```
 
 ### 4.4 运行部署验证（可选但推荐）
